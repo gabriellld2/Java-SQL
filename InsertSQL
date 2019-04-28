@@ -1,0 +1,27 @@
+public class ClienteDAO {
+    
+    private Connection con = null; // cria a conexão com o BD
+    
+ public ClienteDAO(){
+     con = ConnectionFactory.getConnection(); //conecta ao BD 
+     
+ }
+ //Faz o insert no banco de dados  na tabela cliente
+ public boolean save (Cliente cliente){
+     String sql = "INSERT INTO cliente (Nome, Idade) VALUES (?, ?)"; // declara os campos da tabela para fazer o "INSERT"
+       PreparedStatement stmt = null;
+         try{ //inicia o comando SQL pegando os valores inseridos na sequencia 
+          stmt = (PreparedStatement) con.prepareCall(sql);  
+          stmt.setString(1, cliente.getNome());
+          stmt.setString(2, cliente.getIdade());
+          
+          // tenta executar o código SQL 
+          stmt.executeUpdate();
+      return true;
+     }catch (SQLException ex){
+             JOptionPane.showMessageDialog(null, ex, "Erro ao gravar", JOptionPane.ERROR_MESSAGE); // caso não consiga inserir no BD retorna uma mensagem de erro
+             return false;
+     }finally{ 
+             ConnectionFactory.cloceConnection((Connection) con, stmt);
+         }
+ } // caso tudo ocorra corretamente ele fecha a conexão do insert e finaliza.
