@@ -1,0 +1,30 @@
+public List<Cliente> findAll(){
+        
+        String sql = "SELECT * FROM cliente";  //Cria um Select retornando todos os itens de uma tabela
+      
+        PreparedStatement stmt = null; // Inicia o Statement como nulo
+        ResultSet rs = null;  // Inicia o ResultSet como nulo 
+        
+        List<Cliente> cliente = new ArrayList<>(); //Instancia um array listando ele sequencialmente.
+        
+         try {
+             stmt = (PreparedStatement) con.prepareStatement(sql); //Define o stmt como Statement e executa o comando sql
+             rs = stmt.executeQuery(); // Atribui ao ResultSet o comando sql
+              
+             while (rs.next()){                     // Enquanto ResultSet retornar ele instancia um novo cliente "p" retornando os valores solicitados
+                 Cliente p = new Cliente();
+                 p.setID_Cliente(rs.getInt("ID_Cliente"));
+                 p.setNome(rs.getString("Nome"));
+                 p.setIdade(rs.getString("Idade"));
+                 
+                 Cliente.add(p); // adiciona o novo resultado ao Objeto Cliente
+                 
+             }
+             
+         } catch (SQLException ex) {
+           JOptionPane.showMessageDialog(null, ex, "Erro ao gravar", JOptionPane.ERROR_MESSAGE); // Caso dê errado ele retorna uma mensagem de erro
+         }finally{
+             ConnectionFactory.cloceConnection(con, stmt, rs);
+         }
+        return cliente;
+    }
